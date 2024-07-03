@@ -1,0 +1,67 @@
+### Obtener todos los usuarios
+GET http://localhost:3000/api/usuarios
+
+### ValidaToken
+POST http://localhost:8000/api/login/valida
+Content-Type: application/json
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJhZG1pbiIsImNvcnJlbyI6ImFkbWluQGEuY29tIiwic2VndXJpZGFkIjoiMDEwMTAxMDEwMTAxMDEwMTAxMDEiLCJpYXQiOjE3MDkxMzE2MDEsImV4cCI6MTcwOTEzMTY2MX0.6tLMx04VNGQm3bwk52Ls3gkGBTBTxX215rDCHRqa7Hk"
+}
+
+
+
+
+
+### Login
+POST http://localhost:8000/api/login
+Content-Type: application/json
+
+{
+  "nombre":     "usr12321",
+  "correo":     "usr5@a.com",
+  "contrasena": "usr50123456789"
+}
+
+
+### Eliminar un usaurio con POST
+DELETE http://localhost:8000/api/usuarios/20
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJ1c3I1IiwiY29ycmVvIjoidXNyNUBhLmNvbSIsInNlZ3VyaWRhZCI6IjAxMDEwMTAxMDEwMTAxMDEwMTAxIiwiaWF0IjoxNzA5MTYxNjczLCJleHAiOjE3MDkxNjIyNzN9.Sir6S4RCaqBPZZIpV9DA50udXLrodBmjHkucUFlSFBI
+
+
+
+### Actualizar un usuario
+PATCH http://localhost:8000/api/usuarios/2
+Content-Type: applicaion/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJ1c3I1IiwiY29ycmVvIjoidXNyNUBhLmNvbSIsInNlZ3VyaWRhZCI6IjAxMDEwMTAxMDEwMTAxMDEwMTAxIiwiaWF0IjoxNzA5MjIwMTE1LCJleHAiOjE3MDkyMjEzMTV9.DGzM_K1dix4tI-bYWW4pP03FPvoyRYlItQpb1YM5TwI
+
+{
+  "nombre": "usr1 - Se cambia por USuario 1",
+  "correo": "tres@nuevocorre.com",
+  "contrasena": "asdfghjklp",
+  "year": 2323,
+  "seguridad": "Administrador"
+}
+
+
+### Crear un usuario
+POST http://localhost:8000/api/usuarios
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJ1c3I1IiwiY29ycmVvIjoidXNyNUBhLmNvbSIsInNlZ3VyaWRhZCI6IjAxMDEwMTAxMDEwMTAxMDEwMTAxIiwiaWF0IjoxNzA5MTYxNjczLCJleHAiOjE3MDkxNjIyNzN9.Sir6S4RCaqBPZZIpV9DA50udXLrodBmjHkucUFlSFBI
+
+{
+  "nombre": "Usu26",
+  "correo": "usr26@a.com",
+  "contrasena": "usr260123456789",
+  "estado": "En Fila",
+  "seguridad": "11110001100010101010"
+}
+
+### Recuperar un usuario por el ID, se debe indicar el parámetro de obtenerSeguridad si se quieren los permisos
+GET http://localhost:8000/api/usuarios/18
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJ1c3I1IiwiY29ycmVvIjoidXNyNUBhLmNvbSIsInNlZ3VyaWRhZCI6IjAxMDEwMTAxMDEwMTAxMDEwMTAxIiwiaWF0IjoxNzA5MTM1MTUxLCJleHAiOjE3MDkxMzU0NTF9.ybKJM9ilvKa1H-38Nbqk8LFtE2OSYdvbIFfru7NiUoM
+
+### Recuperar todas los usuario sin los permisos de seguridad
+GET http://localhost:8000/api/usuarios
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJ1c3I1IiwiY29ycmVvIjoidXNyNUBhLmNvbSIsInNlZ3VyaWRhZCI6IjAxMDEwMTAxMDEwMTAxMDEwMTAxIiwiaWF0IjoxNzA5MjI4MDYzLCJleHAiOjE3MDkyMjkyNjN9.Wg5wIwPstfuEnDjtkn6gZScN1O1hNzntXVDOZrju8K8
