@@ -31,7 +31,7 @@ export class UsuarioController {
     }
     try {
       const objeto = await this.usuarioModelo.create({ input: result.data })
-      if (esObjetoVacio(objeto)) return res.status(201).json({ estado: 0, payload: null, error: "Correo duplicado", msg: null })
+      if (esObjetoVacio(objeto)) return res.status(201).json({ estado: 0, payload: null, error: 'Correo duplicado', msg: null })
       res.status(201).json({ estado: 1, payload: objeto, error: null, msg: null })
     } catch (e) {
       generaLog(new Date().toString(), e, 'controladores/mysql/usuario -> create', e.message)
@@ -45,34 +45,33 @@ export class UsuarioController {
       if (id === undefined) return res.status(404).json({ estado: 0, payload: null, error: 'No existe el usuario', msg: 'Falta indicar el id' })
       const result = validatePartialUsuario(req.body)
       if (!result.success) {
-        let tmp = JSON.parse(result.error.message)
-        return res.status(400).json({ estado: 0, payload: null, error: 'Falta de información o incorrecta', msg: tmp })
+        return res.status(400).json({ estado: 0, payload: null, error: 'Falta de información o incorrecta', msg: JSON.parse(result.error.message) })
       }
-      let objeto = await this.usuarioModelo.getById({ id })
+      const objeto = await this.usuarioModelo.getById({ id })
       if (esObjetoVacio(objeto)) return res.status(404).json({ estado: 0, payload: null, error: 'No existe el usuario', msg: null })
       let agregarContrasena = 'No'
-      if (req.body.contrasena) agregarContrasena = 'Si'
-      let input = {
+      if (req.body.contraseya) agregarContrasena = 'Si'
+      const input = {
         ...objeto,
         ...req.body
       }
-      let resultado = await this.usuarioModelo.update({ id, input, agregarContrasena })
+      const resultado = await this.usuarioModelo.update({ id, input, agregarContrasena })
       if (!(Object.keys(resultado).length === 0)) return res.status(200).json({ estado: 1, payload: resultado, error: null, msg: null });
-      res.status(200).json({ estado: 0, payload: null, error: 'El Usuario no existe', msg: null });
+      res.status(200).json({ estado: 0, payload: null, error: 'El Usuario no existe', msg: null })
     } catch (e) {
-      generaLog(e, "controllers/usuario -> update")
-      return res.status(404).json({ estado: 0, payload: null, error: errorMSg, msg: e.message })
+      generaLog(new Date().toString(), e, 'controladores/mysql/usuario -> update', e.message)
+      return res.status(404).json({ estado: 0, payload: null, error: 'Falta de información o incorrecta', msg: e.message })
     }
   }
 
   delete = async (req, res) => {
     try {
       const { id } = req.params
-      let resultado = await this.usuarioModelo.delete({ id })
-      if (resultado == true) return res.status(200).json({ estado: 1, payload: resultado, error: null, msg: null });
-      res.status(200).json({ estado: 0, payload: null, error: 'El usuario no se pudo eliminar', msg: null });
+      const resultado = await this.usuarioModelo.delete({ id })
+      if (resultado === true) return res.status(200).json({ estado: 1, payload: resultado, error: null, msg: null })
+      res.status(200).json({ estado: 0, payload: null, error: 'El usuario no se pudo eliminar', msg: null })
     } catch (e) {
-      generaLog(e, "controllers/usuario -> delete")
+      generaLog(new Date().toString(), e, 'controladores/mysql/usuario -> delete', e.message)
       return res.status(404).json({
         estado: 0, payload: null, error: 'El usuario no se pudo eliminar', msg: e
       })
