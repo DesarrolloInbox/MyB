@@ -3,7 +3,7 @@ import cors from 'cors'
 import { revisaToken } from './middlewares/validaTokens.js'
 
 import { usuarioRutas } from './rutas/usuario.js'
-// import { createLoginRouter } from './routes/login.js'
+import { loginRutas } from './rutas/login.js'
 
 export const createApp = ({ usuarioModelo }) => {
   const app = express()
@@ -13,11 +13,7 @@ export const createApp = ({ usuarioModelo }) => {
 
   app.use(revisaToken)
   app.use('/api/usuarios', usuarioRutas({ usuarioModelo }))
-  // app.use('/api/login', createLoginRouter({ usuarioModelo }))
-
-  app.get('/', (req, res) => {
-    res.json({ nombre: 'Pancho' })
-  })
+  app.use('/api/login', loginRutas({ usuarioModelo }))
 
   app.listen(process.env.HTTP_PORT, () => {
     console.log(`Servidor escuchando en puerto http://localhost:${process.env.HTTP_PORT}`)

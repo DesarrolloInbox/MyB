@@ -62,7 +62,7 @@ export class UsuarioModelo {
   static async getByCorreo ({ correo }) {
     try {
       const [resUsr] = await conexion.query(
-        `SELECT BIN_TO_UUID(ID), nombre, correo, estado 
+        `SELECT BIN_TO_UUID(ID), nombre, correo, estado, contraseya
         FROM tblusuarios WHERE correo = ?;`,
         [correo])
       if (resUsr.length === 0) return {}

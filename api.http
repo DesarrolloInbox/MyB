@@ -1,3 +1,22 @@
+### Login
+POST http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+  "nombre":     "usr12321",
+  "correo":     "usr04@a.com",
+  "contraseya": "usr430123456"
+}
+
+### ValidaToken
+POST http://localhost:3000/api/login/validaToken
+Content-Type: application/json
+
+{
+  "token": "yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJVc3UwNCIsImNvcnJlbyI6InVzcjA0QGEuY29tIiwiaWF0IjoxNzIwNDU5OTI5LCJleHAiOjE3MjA0NTk5NTl9.edhzqsKTEId9dW0DMQcTiscU1cCBhM0GFEtSWu29RuE"
+}
+
+
 ### Obtener todos los usuarios
 GET http://localhost:3000/api/usuarios
 
@@ -33,34 +52,4 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJ1c3I1I
 DELETE http://localhost:3000/api/usuarios/68f750f0-38c9-11ef-82bf-ac1a3d752bd0
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJ1c3I1IiwiY29ycmVvIjoidXNyNUBhLmNvbSIsInNlZ3VyaWRhZCI6IjAxMDEwMTAxMDEwMTAxMDEwMTAxIiwiaWF0IjoxNzA5MTYxNjczLCJleHAiOjE3MDkxNjIyNzN9.Sir6S4RCaqBPZZIpV9DA50udXLrodBmjHkucUFlSFBI
-
-
-### ValidaToken
-POST http://localhost:8000/api/login/valida
-Content-Type: application/json
-
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJhZG1pbiIsImNvcnJlbyI6ImFkbWluQGEuY29tIiwic2VndXJpZGFkIjoiMDEwMTAxMDEwMTAxMDEwMTAxMDEiLCJpYXQiOjE3MDkxMzE2MDEsImV4cCI6MTcwOTEzMTY2MX0.6tLMx04VNGQm3bwk52Ls3gkGBTBTxX215rDCHRqa7Hk"
-}
-
-
-
-
-
-### Login
-POST http://localhost:8000/api/login
-Content-Type: application/json
-
-{
-  "nombre":     "usr12321",
-  "correo":     "usr5@a.com",
-  "contrasena": "usr50123456789"
-}
-
-
-### Eliminar un usaurio con POST
-DELETE http://localhost:8000/api/usuarios/20
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJ1c3I1IiwiY29ycmVvIjoidXNyNUBhLmNvbSIsInNlZ3VyaWRhZCI6IjAxMDEwMTAxMDEwMTAxMDEwMTAxIiwiaWF0IjoxNzA5MTYxNjczLCJleHAiOjE3MDkxNjIyNzN9.Sir6S4RCaqBPZZIpV9DA50udXLrodBmjHkucUFlSFBI
-
 
