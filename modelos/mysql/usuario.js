@@ -1,6 +1,7 @@
 import conexion from '../../datos/mysql/conexion_mysql.js'
 import generaLog from '../../utilerias/generaLog.js'
 import bcrypt from 'bcrypt'
+import crypto from 'node:crypto'
 
 export class UsuarioModelo {
   static async getAll ({ orderby, pagina, registros }) {
@@ -12,15 +13,12 @@ export class UsuarioModelo {
     }
     if (pagina) {
       paginaNumero = parseInt(pagina)
-      console.log('A', paginaNumero)
       if (!Number.isInteger(paginaNumero)) {
         paginaNumero = 1
       }
-      console.log('B', paginaNumero)
       if (paginaNumero < 1) {
         paginaNumero = 1
       }
-      console.log('C', paginaNumero)
     }
     if (registros) {
       registrosNumero = parseInt(registros)
@@ -31,10 +29,9 @@ export class UsuarioModelo {
         registrosNumero = process.env.REGISTROS_MOSTRAR_MAX
       }
     }
-    console.log('pagina ', paginaNumero, ' registros ', registrosNumero, '   multipliac ', paginaNumero * registrosNumero)
     try {
       const [resUsr] = await conexion.query(
-        `SELECT BIN_TO_UUID(ID) as id, nombre, correo, estado
+        `SELECT id, nombre, correo, estado
           FROM tblusuarios 
           ${(lowerCaseOrderBy === 'correo' ? 'ORDER BY correo' : (lowerCaseOrderBy === 'id' ? 'ORDER BY id' : ''))} 
           LIMIT ${(paginaNumero - 1) * registrosNumero}, ${registrosNumero}`)
@@ -48,11 +45,20 @@ export class UsuarioModelo {
   static async getById ({ id }) {
     try {
       const [resUsr] = await conexion.query(
-        `SELECT BIN_TO_UUID(ID) as id, nombre, correo, estado, contraseya
-        FROM tblusuarios WHERE BIN_TO_UUID(id) = ?;`,
+        `SELECT id, nombre, correo, estado
+        FROM tblusuarios WHERE id = ?;`,
         [id])
       if (resUsr.length === 0) return {}
-      return resUsr[0]
+      const [resSeg] = await conexion.query(
+        'SELECT * FROM tblusuarios_tblpermisos WHERE usuario_id = ?',
+        [id])
+      const seguridad = []
+      resSeg.forEach(ele => seguridad.push(ele.permiso_id))
+      const resUsr2 = {
+        ...resUsr[0],
+        seguridad
+      }
+      return resUsr2
     } catch (e) {
       generaLog(new Date().toString(), e, 'modelos/mysql/usuario -> getById', e.message)
       return {}
@@ -62,11 +68,20 @@ export class UsuarioModelo {
   static async getByCorreo ({ correo }) {
     try {
       const [resUsr] = await conexion.query(
-        `SELECT BIN_TO_UUID(ID), nombre, correo, estado, contraseya
+        `SELECT id, nombre, correo, estado, contraseya
         FROM tblusuarios WHERE correo = ?;`,
         [correo])
       if (resUsr.length === 0) return {}
-      return resUsr[0]
+      const [resSeg] = await conexion.query(
+        'SELECT * FROM tblusuarios_tblpermisos WHERE usuario_id = ?',
+        [resUsr[0].id])
+      const seguridad = []
+      resSeg.forEach(ele => seguridad.push(ele.permiso_id))
+      const resUsr2 = {
+        ...resUsr[0],
+        seguridad
+      }
+      return resUsr2
     } catch (e) {
       generaLog(new Date().toString(), e, 'modelos/mysql/usuario -> getByCorreo', e.message)
       return {}
@@ -74,22 +89,26 @@ export class UsuarioModelo {
   }
 
   static async create ({ input }) {
-    const { nombre, correo, contraseya, estado } = input
-
+    const { nombre, correo, contraseya, estado, seguridad } = input
     try {
       const contrasenaEncriptada = await bcrypt.hash(contraseya, 10)
-
-      const [uuidResult] = await conexion.query('SELECT UUID() uuid')
-      const [{ uuid }] = uuidResult
-
+      const uuid = crypto.randomUUID()
       await conexion.execute(
         `INSERT INTO tblusuarios (id, nombre, correo, contraseya, estado) 
-        VALUES (UUID_TO_BIN("${uuid}"), ?, ?, ?, ?);`,
+        VALUES ("${uuid}", ?, ?, ?, ?);`,
         [nombre, correo, contrasenaEncriptada, estado]
       )
-
+      const misValores = []
+      if (seguridad.length > 0) {
+        seguridad.forEach(ele => misValores.push([uuid, ele]))
+        await conexion.query(
+          `INSERT INTO tblusuarios_tblpermisos (usuario_id, permiso_id) 
+          VALUES ?`,
+          [misValores]
+        )
+      }
       const objeto = {
-        id: uuid, nombre, correo, contrasenaEncriptada, estado
+        id: uuid, nombre, correo, contrasenaEncriptada, estado, seguridad: misValores
       }
       return objeto
     } catch (e) {
@@ -101,7 +120,7 @@ export class UsuarioModelo {
   static async delete ({ id }) {
     try {
       const [resultado] = await conexion.execute(
-        'DELETE FROM tblusuarios WHERE BIN_TO_UUID(id) = ?;',
+        'DELETE FROM tblusuarios WHERE id = ?;',
         [id]
       )
       console.log(resultado)
@@ -113,22 +132,37 @@ export class UsuarioModelo {
     }
   }
 
-  static async update ({ id, input, agregarContrasena }) {
+  static async update ({ id, input, agregarContrasena, seguridad }) {
     const { nombre, correo, contraseya, estado } = input
     try {
       let resultado
       if (agregarContrasena === 'Si') {
         const contraseyaEncriptada = await bcrypt.hash(contraseya, 10)
-        console.log(contraseyaEncriptada)
         resultado = await conexion.execute(
-          'UPDATE tblusuarios SET nombre = ?, correo = ?, contraseya = ?, estado = ? WHERE BIN_TO_UUID(id) = ?;',
+          'UPDATE tblusuarios SET nombre = ?, correo = ?, contraseya = ?, estado = ? WHERE id = ?;',
           [nombre, correo, contraseyaEncriptada, estado, id]
         )
       } else {
         resultado = await conexion.execute(
-          'UPDATE tblusuarios SET nombre = ?, correo = ?, estado = ? WHERE BIN_TO_UUID(id) = ?;',
+          'UPDATE tblusuarios SET nombre = ?, correo = ?, estado = ? WHERE id = ?;',
           [nombre, correo, estado, id]
         )
+      }
+      await conexion.execute(
+        `DELETE FROM tblusuarios_tblpermisos 
+        WHERE usuario_id = ?`,
+        [id]
+      )
+      if (seguridad) {
+        if (seguridad.length > 0) {
+          const misValores = []
+          seguridad.forEach(ele => misValores.push([id, ele]))
+          await conexion.query(
+            `INSERT INTO tblusuarios_tblpermisos (usuario_id, permiso_id) 
+            VALUES ?`,
+            [misValores]
+          )
+        }
       }
       if (resultado[0].affectedRows > 0) return { id, nombre, correo, estado }
       return {}
@@ -139,12 +173,18 @@ export class UsuarioModelo {
   }
 }
 
-(async () => {
-  // console.log(await UsuarioModelo.getById({ id: 'edbd7eb6-38b6-11ef-82bf-ac1a3d752bd0' }))
-  // console.log(await UsuarioModelo.getByCorreo({ correo: 'cuatro@a' }))
+// const unDato = 'treinta'
+// const unSeguridad = ['vuno', 'vdos']
+// console.log();
+
+// (async () => {
+  // console.log(await UsuarioModelo.getByCorreo({ correo: 'uno@a' }))
   // console.log(
-  // await UsuarioModelo.create({ input: { nombre: 'b6', correo: 'b6@a', estado: 'b6', contraseya: 'b6' } }))
-  // console.log(await UsuarioModelo.getAll({ orderby: 'correo', pagina: 1, registros: '3' }))
+  //  await UsuarioModelo.create({ 
+  //    input: { nombre: unDato, correo: `${unDato}@a`, estado: unDato, 
+  //      contraseya: unDato, seguridad: unSeguridad } }))
+  // console.log(await UsuarioModelo.getAll({ orderby: 'correo', pagina: 1, registros: '50' }))
+  // console.log(await UsuarioModelo.getById({ id: '18ea82d8-f62a-424c-998c-8e51b9031e20' }))
   // console.log(await UsuarioModelo.getAll({ orderby: 'correo', registros: '3' }))
   // console.log(await UsuarioModelo.getAll({ orderby: 'correo', pagina: 3 }))
   // console.log(await UsuarioModelo.getAll({ orderby: 'correo', pagina: 1 }))
@@ -152,10 +192,11 @@ export class UsuarioModelo {
   // console.log(await UsuarioModelo.getAll({ orderby: 'id', pagina: 1, registros: 5 }))
   // console.log(await UsuarioModelo.getAll({ pagina: 1, registros: 5 }))
   // console.log(await UsuarioModelo.delete({ id: '3891acaa-38ca-11ef-82bf-ac1a3d752bd0' }))
-  // console.log(await UsuarioModelo.getById({ id: 'edbd7eb6-38b6-11ef-82bf-ac1a3d752bd0' }))
+  // console.log(await UsuarioModelo.getById({ id: 'c412affc-3d7c-11ef-82bf-ac1a3d752bd0' }))
   // console.log(await UsuarioModelo.update({
-  //   id: 'edbd7eb6-38b6-11ef-82bf-ac1a3d752bd0',
-  //   input: {nombre: 'cuatromas4', correo: 'cuatro@amas4', estado:'cuatroa4', contraseya:'cin4'}, agregarContrasena: 'Si' }))
-  //  console.log(await UsuarioModelo.getById({ id: 'edbd7eb6-38b6-11ef-82bf-ac1a3d752bd0' }))
+  //   id: '18ea82d8-f62a-424c-998c-8e51b9031e20',
+  //   input: { nombre: unDato, correo: `${unDato}@a`, estado: unDato, contraseya: unDato },
+  //    agregarContrasena: 'Si'}))
+  //   console.log(await UsuarioModelo.getById({ id: '18ea82d8-f62a-424c-998c-8e51b9031e20' }))
   // console.log(await UsuarioModelo.getAll({}))
-})()
+// })()

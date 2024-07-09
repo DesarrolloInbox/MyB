@@ -11,7 +11,6 @@ export const usuarioRutas = ({ usuarioModelo }) => {
   usuarioRouter.post('/', usuarioController.create)
   usuarioRouter.delete('/:id', usuarioController.delete)
   usuarioRouter.delete('/', usuarioController.delete)
-  // usuarioRouter.patch('/', usuarioController.update)
   usuarioRouter.patch('/:id', usuarioController.update)
 
   return usuarioRouter

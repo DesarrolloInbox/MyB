@@ -30,7 +30,7 @@ export class LoginController {
         const token = jwt.sign({
           nombre: objeto.nombre,
           correo: objeto.correo
-        }, process.env.JWT_SECRETO, { expiresIn: 1200 }
+        }, process.env.JWT_SECRETO, { expiresIn: 30 }
         )
         res.status(200).json({
           estado: 1,

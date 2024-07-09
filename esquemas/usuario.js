@@ -16,6 +16,7 @@ const usuarioEsquema = z.object({
     invalid_type_error: 'Estado obligatorio (Activo o Baja).',
     required_error: 'Estado obligatorio (Activo o Baja).'
   }).min(1, { message: 'Estado obligatorio (Activo o Baja).' }),
+  seguridad: z.string().array()
 })
 
 export function validateUsuario (input) {

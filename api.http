@@ -3,9 +3,8 @@ POST http://localhost:3000/api/login
 Content-Type: application/json
 
 {
-  "nombre":     "usr12321",
-  "correo":     "usr04@a.com",
-  "contraseya": "usr430123456"
+  "correo":     "user01@a.com",
+  "contraseya": "user01qwert"
 }
 
 ### ValidaToken
@@ -13,15 +12,21 @@ POST http://localhost:3000/api/login/validaToken
 Content-Type: application/json
 
 {
-  "token": "yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJVc3UwNCIsImNvcnJlbyI6InVzcjA0QGEuY29tIiwiaWF0IjoxNzIwNDU5OTI5LCJleHAiOjE3MjA0NTk5NTl9.edhzqsKTEId9dW0DMQcTiscU1cCBhM0GFEtSWu29RuE"
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJVc3IgMDEiLCJjb3JyZW8iOiJ1c2VyMDFAYS5jb20iLCJpYXQiOjE3MjA1NDM4NzcsImV4cCI6MTcyMDU0MzkwN30.RNT2n3vhJMxZ2Oneyq-vhao0iOS7RRu0Cqtb_auO2rY"
 }
 
 
 ### Obtener todos los usuarios
 GET http://localhost:3000/api/usuarios
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJVc3IgMDEiLCJjb3JyZW8iOiJ1c2VyMDFAYS5jb20iLCJpYXQiOjE3MjA1NDQyNjYsImV4cCI6MTcyMDU0NDI5Nn0.DjSGwPzgeLgilIuvQ86_nHpd9t7E4QBiVqiw3xseH9E
+
+
+### Obtener todos los usuarios
+GET http://localhost:3000/api/usuarios?orderby=correo&pagina=1&registros=3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJVc3IgMDEiLCJjb3JyZW8iOiJ1c2VyMDFAYS5jb20iLCJpYXQiOjE3MjA1NDQyNjYsImV4cCI6MTcyMDU0NDI5Nn0.DjSGwPzgeLgilIuvQ86_nHpd9t7E4QBiVqiw3xseH9E
 
 ### Recuperar un usuario por el ID, se debe indicar el parámetro de obtenerSeguridad si se quieren los permisos
-GET http://localhost:3000/api/usuarios/edbd7eb6-38b6-11ef-82bf-ac1a3d752bd0
+GET http://localhost:3000/api/usuarios/29f77419-d61f-4c02-9915-a123ffd76027
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJ1c3I1IiwiY29ycmVvIjoidXNyNUBhLmNvbSIsInNlZ3VyaWRhZCI6IjAxMDEwMTAxMDEwMTAxMDEwMTAxIiwiaWF0IjoxNzA5MTM1MTUxLCJleHAiOjE3MDkxMzU0NTF9.ybKJM9ilvKa1H-38Nbqk8LFtE2OSYdvbIFfru7NiUoM
 
 ### Crear un usuario
@@ -30,22 +35,24 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJ1c3I1IiwiY29ycmVvIjoidXNyNUBhLmNvbSIsInNlZ3VyaWRhZCI6IjAxMDEwMTAxMDEwMTAxMDEwMTAxIiwiaWF0IjoxNzA5MTYxNjczLCJleHAiOjE3MDkxNjIyNzN9.Sir6S4RCaqBPZZIpV9DA50udXLrodBmjHkucUFlSFBI
 
 {
-  "nombre": "Usu04",
-  "correo": "usr04@a.com",
-  "contraseya": "usr430123456",
-  "estado": "En Fila"
+  "nombre": "Usr 01",
+  "correo": "user01@a.com",
+  "contraseya": "user01qwert",
+  "estado": "En Fila",
+  "seguridad": ["df", "tg"]
 }
 
 ### Actualizar un usuario
-PATCH http://localhost:3000/api/usuarios/edbd7eb6-38b6-11ef-82bf-ac1a3d752bd0
+PATCH http://localhost:3000/api/usuarios/29f77419-d61f-4c02-9915-a123ffd76027
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJ1c3I1IiwiY29ycmVvIjoidXNyNUBhLmNvbSIsInNlZ3VyaWRhZCI6IjAxMDEwMTAxMDEwMTAxMDEwMTAxIiwiaWF0IjoxNzA5MTYxNjczLCJleHAiOjE3MDkxNjIyNzN9.Sir6S4RCaqBPZZIpV9DA50udXLrodBmjHkucUFlSFBI
 
 {
-  "nombre": "Usu05",
-  "correo": "usr05@a.com",
+  "nombre": "Usu09",
+  "correo": "usr09@a.com",
   "contraseya": "usr050123456",
-  "estado": "En Fila"
+  "estado": "En Fila",
+  "seguridad": ["A", "B", "C", "D"]
 }
 
 ### Eliminar un usaurio con POST

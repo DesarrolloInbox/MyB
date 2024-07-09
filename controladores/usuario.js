@@ -8,7 +8,27 @@ export class UsuarioController {
   }
 
   getAll = async (req, res) => {
-    const payload = await this.usuarioModelo.getAll({})
+    console.log('Query ', req.query)
+    let orderby
+    if (req.query.orderby) {
+      if (req.query.orderby === 'correo') {
+        orderby = 'correo'
+      } else if (req.query.orderby === 'id') {
+        orderby = 'id'
+      }
+    }
+    let pagina
+    if (req.query.pagina) {
+      pagina = req.query.pagina
+    }
+
+    let registros
+    if (req.query.registros) {
+      registros = req.query.registros
+    }
+
+    const payload = await this.usuarioModelo.getAll({ orderby, pagina, registros })
+    // orderby: 'idq', pagina: 1, registros: 5
     res.json({ estado: 1, payload, error: null, msg: null })
   }
 
@@ -53,9 +73,9 @@ export class UsuarioController {
       if (req.body.contraseya) agregarContrasena = 'Si'
       const input = {
         ...objeto,
-        ...req.body
+        ...result.data
       }
-      const resultado = await this.usuarioModelo.update({ id, input, agregarContrasena })
+      const resultado = await this.usuarioModelo.update({ id, input, agregarContrasena, seguridad: input.seguridad })
       if (!(Object.keys(resultado).length === 0)) return res.status(200).json({ estado: 1, payload: resultado, error: null, msg: null });
       res.status(200).json({ estado: 0, payload: null, error: 'El Usuario no existe', msg: null })
     } catch (e) {
