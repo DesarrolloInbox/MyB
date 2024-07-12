@@ -22,7 +22,6 @@ export class LoginController {
       const objeto = await this.usuarioModelo.getByCorreo({ correo })
       if (esObjetoVacio(objeto)) return res.status(401).json({ estado: 0, error: 'Usuario/Contraseña Invalida 3' })
       if (objeto.estado === 'Inactivo') return res.status(401).json({ estado: 0, error: 'Usuario Inactivo' })
-      console.log(objeto)
       const matchPassword = await bcrypt.compare(contraseya, objeto.contraseya)
       if (!matchPassword) {
         return res.status(401).json({ estado: 0, error: 'Usuario/Contraseña Invalida 4' })
@@ -30,7 +29,7 @@ export class LoginController {
         const token = jwt.sign({
           nombre: objeto.nombre,
           correo: objeto.correo
-        }, process.env.JWT_SECRETO, { expiresIn: 30 }
+        }, process.env.JWT_SECRETO, { expiresIn: 600 }
         )
         res.status(200).json({
           estado: 1,

@@ -12,13 +12,14 @@ POST http://localhost:3000/api/login/validaToken
 Content-Type: application/json
 
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJVc3IgMDEiLCJjb3JyZW8iOiJ1c2VyMDFAYS5jb20iLCJpYXQiOjE3MjA1NDM4NzcsImV4cCI6MTcyMDU0MzkwN30.RNT2n3vhJMxZ2Oneyq-vhao0iOS7RRu0Cqtb_auO2rY"
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJVc3IgMDEiLCJjb3JyZW8iOiJ1c2VyMDFAYS5jb20iLCJpYXQiOjE3MjA3NTE5ODksImV4cCI6MTcyMDc1MjU4OX0.9U1G6tMB6gsQ8QdsXlFq-qX76TRPVT4QwJqU4eUwPuI",
+    "id": "3b7fb2fa-185d-464d-a133-8c9b12265af9"
 }
 
 
 ### Obtener todos los usuarios
 GET http://localhost:3000/api/usuarios
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJVc3IgMDEiLCJjb3JyZW8iOiJ1c2VyMDFAYS5jb20iLCJpYXQiOjE3MjA1NDQyNjYsImV4cCI6MTcyMDU0NDI5Nn0.DjSGwPzgeLgilIuvQ86_nHpd9t7E4QBiVqiw3xseH9E
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJVc3IgMDEiLCJjb3JyZW8iOiJ1c2VyMDFAYS5jb20iLCJpYXQiOjE3MjA3NTE3NDMsImV4cCI6MTcyMDc1MTc3M30.QqYHwmtKuBA760_d0bvD1cQ2EOh3OqHD8Z9jUCwJLRg
 
 
 ### Obtener todos los usuarios
@@ -26,37 +27,41 @@ GET http://localhost:3000/api/usuarios?orderby=correo&pagina=1&registros=3
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJVc3IgMDEiLCJjb3JyZW8iOiJ1c2VyMDFAYS5jb20iLCJpYXQiOjE3MjA1NDQyNjYsImV4cCI6MTcyMDU0NDI5Nn0.DjSGwPzgeLgilIuvQ86_nHpd9t7E4QBiVqiw3xseH9E
 
 ### Recuperar un usuario por el ID, se debe indicar el parámetro de obtenerSeguridad si se quieren los permisos
-GET http://localhost:3000/api/usuarios/29f77419-d61f-4c02-9915-a123ffd76027
+GET http://localhost:3000/api/usuarios/b5223b93-cba4-457a-bf0a-378c9d062dff
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJ1c3I1IiwiY29ycmVvIjoidXNyNUBhLmNvbSIsInNlZ3VyaWRhZCI6IjAxMDEwMTAxMDEwMTAxMDEwMTAxIiwiaWF0IjoxNzA5MTM1MTUxLCJleHAiOjE3MDkxMzU0NTF9.ybKJM9ilvKa1H-38Nbqk8LFtE2OSYdvbIFfru7NiUoM
+
+### Recuperar un usuario por el ID, se debe indicar el parámetro de obtenerSeguridad si se quieren los permisos
+GET http://localhost:3000/api/usuarios/eab53434-ab7a-4e2e-8049-09256725ad11
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJ1c3I1IiwiY29ycmVvIjoidXNyNUBhLmNvbSIsInNlZ3VyaWRhZCI6IjAxMDEwMTAxMDEwMTAxMDEwMTAxIiwiaWF0IjoxNzA5MTM1MTUxLCJleHAiOjE3MDkxMzU0NTF9.ybKJM9ilvKa1H-38Nbqk8LFtE2OSYdvbIFfru7NiUoM
 
 ### Crear un usuario
 POST http://localhost:3000/api/usuarios
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJ1c3I1IiwiY29ycmVvIjoidXNyNUBhLmNvbSIsInNlZ3VyaWRhZCI6IjAxMDEwMTAxMDEwMTAxMDEwMTAxIiwiaWF0IjoxNzA5MTYxNjczLCJleHAiOjE3MDkxNjIyNzN9.Sir6S4RCaqBPZZIpV9DA50udXLrodBmjHkucUFlSFBI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJVc3IgMDEiLCJjb3JyZW8iOiJ1c2VyMDFAYS5jb20iLCJpYXQiOjE3MjA3NjAzOTgsImV4cCI6MTcyMDc2MDk5OH0.aYKygmmaUkXRNWSuORXNBdon_Cc3rCLReWFuhS8_8t8
 
 {
-  "nombre": "Usr 01",
-  "correo": "user01@a.com",
-  "contraseya": "user01qwert",
-  "estado": "En Fila",
-  "seguridad": ["df", "tg"]
+  "nombre": "Usr 42",
+  "correo": "user42@a.com",
+  "contraseya": "User42qwert",
+  "estado": "Actua42",
+  "seguridad": ["USR-LI"]
 }
 
 ### Actualizar un usuario
-PATCH http://localhost:3000/api/usuarios/29f77419-d61f-4c02-9915-a123ffd76027
+PATCH http://localhost:3000/api/usuarios/b5223b93-cba4-457a-bf0a-378c9d062dff
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJ1c3I1IiwiY29ycmVvIjoidXNyNUBhLmNvbSIsInNlZ3VyaWRhZCI6IjAxMDEwMTAxMDEwMTAxMDEwMTAxIiwiaWF0IjoxNzA5MTYxNjczLCJleHAiOjE3MDkxNjIyNzN9.Sir6S4RCaqBPZZIpV9DA50udXLrodBmjHkucUFlSFBI
 
 {
-  "nombre": "Usu09",
-  "correo": "usr09@a.com",
-  "contraseya": "usr050123456",
-  "estado": "En Fila",
-  "seguridad": ["A", "B", "C", "D"]
+  "nombre": "Usu30",
+  "correo": "usr30@a.com",
+  "contraseya": "usr300123456",
+  "estado": "Enff",
+  "seguridad": ["A", "B", "C", "D", "H", "I", "J"]
 }
 
 ### Eliminar un usaurio con POST
-DELETE http://localhost:3000/api/usuarios/68f750f0-38c9-11ef-82bf-ac1a3d752bd0
+DELETE http://localhost:3000/api/usuarios/949953e2-eb1d-4b20-9973-6a3c872b3037
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJ1c3I1IiwiY29ycmVvIjoidXNyNUBhLmNvbSIsInNlZ3VyaWRhZCI6IjAxMDEwMTAxMDEwMTAxMDEwMTAxIiwiaWF0IjoxNzA5MTYxNjczLCJleHAiOjE3MDkxNjIyNzN9.Sir6S4RCaqBPZZIpV9DA50udXLrodBmjHkucUFlSFBI
 
