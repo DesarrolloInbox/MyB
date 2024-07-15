@@ -79,6 +79,7 @@ export class UsuarioModelo {
         `SELECT id, nombre, correo, estado, contraseya
         FROM tblusuarios WHERE correo = ?;`,
         correo)
+      console.log('Termina la cionsulta 1');
       DB.close()
       if (resUsr.length === 0) return {}
       conexion = await DB.open()
@@ -91,6 +92,7 @@ export class UsuarioModelo {
         ...resUsr[0],
         seguridad
       }
+      console.log(resUsr2)
       return resUsr2
     } catch (e) {
       generaLog(new Date().toString(), e, 'modelos/sqlite/usuario -> getByCorreo', e.message)

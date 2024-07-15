@@ -19,7 +19,8 @@ export class LoginController {
       }
       const { correo, contraseya } = req.body
       if (correo === undefined || contraseya === undefined) return res.status(401).json({ estado: 0, error: 'Usuario/Contraseña Invalida 2' })
-      const objeto = await this.usuarioModelo.getByCorreo({ correo })
+      console.log('Correo: ', correo)
+        const objeto = await this.usuarioModelo.getByCorreo({ correo })
       if (esObjetoVacio(objeto)) return res.status(401).json({ estado: 0, error: 'Usuario/Contraseña Invalida 3' })
       if (objeto.estado === 'Inactivo') return res.status(401).json({ estado: 0, error: 'Usuario Inactivo' })
       const matchPassword = await bcrypt.compare(contraseya, objeto.contraseya)

@@ -97,11 +97,11 @@ export class DB {
 
     this.#db.exec(`
       INSERT INTO tblusuarios (id, nombre, correo, contraseya) VALUES
-        ('${reg1}', 'nombre uno', 'uno@a.com', 'Pwd01uno'),
-        ('${reg2}', 'nombre dos', 'dos@a.com', 'Pwd01dos'),
-        ('${reg3}', 'nombre tres', 'tres@a.com', 'Pwd01tres'),
-        ('${reg4}', 'nombre cuatro', 'cuatro@a.com', 'Pwd01cuatro'),
-        ('${reg5}', 'nombre cinco', 'cinco@a.com', 'Pwd01cinco')
+        ('${reg1}', 'nombre uno', 'uno@a.com', 'Uno01qwerty'),
+        ('${reg2}', 'nombre dos', 'dos@a.com', 'Dos02qwerty'),
+        ('${reg3}', 'nombre tres', 'tres@a.com', 'Tres03qwerty'),
+        ('${reg4}', 'nombre cuatro', 'cuatro@a.com', 'Cuatro04qwerty'),
+        ('${reg5}', 'nombre cinco', 'cinco@a.com', 'Cinco05qwerty')
       `, (error) => {
       if (error) {
         console.log(error.message)

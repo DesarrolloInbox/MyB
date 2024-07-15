@@ -30,6 +30,7 @@ export class DB {
   // Forma Asyncrona
   static async open () {
     if (this.#db === undefined) {
+      console.log(process.env.SQLITEPATHDB);
       this.#db = await AsyncDatabase.open(process.env.SQLITEPATHDB)
       this.#db.inner.on('trace', (sql) => console.log('[TRAZADO]', sql))
     }
