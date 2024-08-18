@@ -1,7 +1,20 @@
 import x from 'sqlite3'
 import crypto from 'node:crypto'
+import bcrypt from 'bcrypt'
+// import { log } from 'node:console'
 
 const sqlite3 = x.verbose()
+
+let pw1 = ''
+let pw2 = ''
+let pw3 = ''
+let pw4 = ''
+let pw5 = ''
+let pw6 = ''
+let pw7 = ''
+let pw8 = ''
+let pw9 = ''
+let pw10 = ''
 
 export class DB {
   static #db
@@ -58,7 +71,7 @@ export class DB {
       if (error) {
         console.log(error.message)
       } else {
-        console.log('Tabla tblpermisos creada')
+        console.log('Tabla tblpermisos llenada con datos iniciales')
       }
     }
     )
@@ -94,14 +107,24 @@ export class DB {
     const reg3 = crypto.randomUUID()
     const reg4 = crypto.randomUUID()
     const reg5 = crypto.randomUUID()
+    const reg6 = crypto.randomUUID()
+    const reg7 = crypto.randomUUID()
+    const reg8 = crypto.randomUUID()
+    const reg9 = crypto.randomUUID()
+    const reg10 = crypto.randomUUID()
 
     this.#db.exec(`
       INSERT INTO tblusuarios (id, nombre, correo, contraseya) VALUES
-        ('${reg1}', 'nombre uno', 'uno@a.com', 'Uno01qwerty'),
-        ('${reg2}', 'nombre dos', 'dos@a.com', 'Dos02qwerty'),
-        ('${reg3}', 'nombre tres', 'tres@a.com', 'Tres03qwerty'),
-        ('${reg4}', 'nombre cuatro', 'cuatro@a.com', 'Cuatro04qwerty'),
-        ('${reg5}', 'nombre cinco', 'cinco@a.com', 'Cinco05qwerty')
+      ('${reg1}', 'nombre uno', 'uno01@a.com', '${pw1}'),
+        ('${reg2}', 'nombre dos', 'dos02@a.com', '${pw2}'),
+        ('${reg3}', 'nombre tres', 'tres03@a.com', '${pw3}'),
+        ('${reg4}', 'nombre cuatro', 'cuatro04@a.com', '${pw4}'),
+        ('${reg5}', 'nombre cinco', 'cinco05@a.com', '${pw5}'),
+        ('${reg6}', 'nombre seis', 'seis06@a.com', '${pw6}'),
+        ('${reg7}', 'nombre siete', 'siete07@a.com', '${pw7}'),
+        ('${reg8}', 'nombre ocho', 'ocho08@a.com', '${pw8}'),
+        ('${reg9}', 'nombre nueve', 'nueve09@a.com', '${pw9}'),
+        ('${reg10}', 'nombre diez', 'diez10@a.com', '${pw10}')
       `, (error) => {
       if (error) {
         console.log(error.message)
@@ -154,6 +177,19 @@ export class DB {
   }
 }
 
-DB.open()
-DB.createTables()
-DB.close()
+(async () => {
+  pw1 = await bcrypt.hash('Uno01qwerty', 10)
+  pw2 = await bcrypt.hash('Dos02qwerty', 10)
+  pw3 = await bcrypt.hash('Tres03qwerty', 10)
+  pw4 = await bcrypt.hash('Cuatro04qwerty', 10)
+  pw5 = await bcrypt.hash('Cinco05qwerty', 10)
+  pw6 = await bcrypt.hash('Seis06qwerty', 10)
+  pw7 = await bcrypt.hash('Siete07qwerty', 10)
+  pw8 = await bcrypt.hash('Ocho08qwerty', 10)
+  pw9 = await bcrypt.hash('Nueve09qwerty', 10)
+  pw10 = await bcrypt.hash('Diez10qwerty', 10)
+  console.log('Terminado')
+  DB.open()
+  DB.createTables()
+  DB.close()
+})()

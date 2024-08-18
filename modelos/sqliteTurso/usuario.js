@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { DB } from '../../datos/sqlite/conexion_sqlite.js'
+import conexion from '../../datos/sqliteTurso/conexion_sqliteTurso.js'
 import generaLog from '../../utilerias/generaLog.js'
 
 export class UsuarioModelo {
@@ -29,75 +29,66 @@ export class UsuarioModelo {
       }
     }
 
+    const stmt = `SELECT id, nombre, correo, estado FROM tblusuarios ${(lowerCaseOrderBy === 'correo' ? 'ORDER BY correo' : (lowerCaseOrderBy === 'id' ? 'ORDER BY id' : ''))} LIMIT ${registrosNumero}, ${(paginaNumero - 1) * registrosNumero};`
+    console.log('La consulta es ', stmt)
     try {
-      const conexion = await DB.open()
-      const resUsr = await conexion.all(
-        `SELECT id, nombre, correo, estado
-      FROM tblusuarios 
-      ${(lowerCaseOrderBy === 'correo' ? 'ORDER BY correo' : (lowerCaseOrderBy === 'id' ? 'ORDER BY id' : ''))} 
-      LIMIT ${(paginaNumero - 1) * registrosNumero}, ${registrosNumero}`)
-      await DB.close()
-      return resUsr
+      const { rows } = await conexion.execute({
+        sql: `${stmt}`,
+        args: []
+      })
+      return rows
     } catch (e) {
       generaLog(new Date().toString(), e, 'modelos/sqlite/usuario -> getAll', e.message)
-      await DB.close()
       return []
     }
   }
 
   static async getById ({ id }) {
     try {
-      let conexion = await DB.open()
-      const resUsr = await conexion.all(
-        `SELECT id, nombre, correo, estado, contraseya
+      const { rows } = await conexion.execute({
+        sql: `SELECT id, nombre, correo, estado, contraseya
         FROM tblusuarios WHERE id = ?;`,
-        id)
-      DB.close()
-      if (resUsr.length === 0) return {}
-      conexion = await DB.open()
-      const resSeg = await conexion.all(
-        'SELECT * FROM tblusuarios_tblpermisos WHERE usuario_id = ?', id)
-      DB.close()
+        args: [id]
+      })
+      if (rows.length === 0) return {}
+      const resSeg = await conexion.execute({
+        sql: 'SELECT * FROM tblusuarios_tblpermisos WHERE usuario_id = ?',
+        args: [rows[0].id]
+      })
       const seguridad = []
-      resSeg.forEach(ele => seguridad.push(ele.permiso_id))
+      resSeg.rows.forEach(ele => seguridad.push(ele.permiso_id))
       const resUsr2 = {
-        ...resUsr[0],
+        ...rows[0],
         seguridad
       }
       return resUsr2
     } catch (e) {
       generaLog(new Date().toString(), e, 'modelos/sqlite/usuario -> getById', e.message)
-      await DB.close()
       return {}
     }
   }
 
   static async getByCorreo ({ correo }) {
     try {
-      let conexion = await DB.open()
-      console.log('modelos->sqlite->usuario.js ', correo)
-      const resUsr = await conexion.all(
-        `SELECT id, nombre, correo, estado, contraseya
+      const { rows } = await conexion.execute({
+        sql: `SELECT id, nombre, correo, estado, contraseya
         FROM tblusuarios WHERE correo = ?;`,
-        correo)
-      DB.close()
-      console.log(resUsr)
-      if (resUsr.length === 0) return {}
-      conexion = await DB.open()
-      const resSeg = await conexion.all(
-        'SELECT * FROM tblusuarios_tblpermisos WHERE usuario_id = ?', resUsr[0].id)
-      DB.close()
+        args: [correo]
+      })
+      if (rows.length === 0) return {}
+      const resSeg = await conexion.execute({
+        sql: 'SELECT * FROM tblusuarios_tblpermisos WHERE usuario_id = ?',
+        args: [rows[0].id]
+      })
       const seguridad = []
-      resSeg.forEach(ele => seguridad.push(ele.permiso_id))
+      resSeg.rows.forEach(ele => seguridad.push(ele.permiso_id))
       const resUsr2 = {
-        ...resUsr[0],
+        ...rows[0],
         seguridad
       }
-      console.log(resUsr2)
       return resUsr2
     } catch (e) {
       generaLog(new Date().toString(), e, 'modelos/sqlite/usuario -> getByCorreo', e.message)
-      await DB.close()
       return {}
     }
   }
@@ -107,50 +98,43 @@ export class UsuarioModelo {
     try {
       const contrasenaEncriptada = await bcrypt.hash(contraseya, 10)
       const uuid = crypto.randomUUID()
-      const conexion = await DB.open()
-      await conexion.run(
-        `INSERT INTO tblusuarios (id, nombre, correo, contraseya, estado) 
+      await conexion.execute({
+        sql: `INSERT INTO tblusuarios (id, nombre, correo, contraseya, estado) 
         VALUES ("${uuid}", ?, ?, ?, ?);`,
-        nombre, correo, contrasenaEncriptada, estado
-      )
+        args: [nombre, correo, contrasenaEncriptada, estado]
+      })
 
       const misValores = []
       if (seguridad.length > 0) {
         seguridad.forEach(async ele => {
           misValores.push([uuid, ele])
-          await conexion.run(
-            `INSERT INTO tblusuarios_tblpermisos (usuario_id, permiso_id) 
+          await conexion.execute({
+            sql: `INSERT INTO tblusuarios_tblpermisos (usuario_id, permiso_id) 
             VALUES (?,?)`,
-            uuid, ele
-          )
+            args: [uuid, ele]
+          })
         })
       }
       const objeto = {
         id: uuid, nombre, correo, contrasenaEncriptada, estado, seguridad: misValores
       }
-      await DB.close()
       return objeto
     } catch (e) {
       generaLog(new Date().toString(), e, 'modelos/sqlite/usuario -> create', e.message)
-      await DB.close()
       return {}
     }
   }
 
   static async delete ({ id }) {
     try {
-      const conexion = await DB.open()
-
-      const { changes } = await conexion.run(
-        'DELETE FROM tblusuarios WHERE id = ?',
-        id
-      )
-      await DB.close()
-      if (changes > 0) return true
+      const { rowsAffected } = await conexion.execute({
+        sql: 'DELETE FROM tblusuarios WHERE id = ?',
+        args: [id]
+      })
+      if (rowsAffected > 0) return true
       return false
     } catch (e) {
       generaLog(new Date().toString(), e, 'modelos/sqlite/usuario -> delete', e.message)
-      await DB.close()
       return false
     }
   }
@@ -159,45 +143,44 @@ export class UsuarioModelo {
     const { nombre, correo, contraseya, estado } = input
     try {
       let resultado
-      const conexion = await DB.open()
       if (agregarContrasena === 'Si') {
         const contraseyaEncriptada = await bcrypt.hash(contraseya, 10)
-        resultado = await conexion.run(
-          'UPDATE tblusuarios SET nombre = ?, correo = ?, contraseya = ?, estado = ? WHERE id = ?;',
-          nombre, correo, contraseyaEncriptada, estado, id
-        )
+        const { rowsAffected } = await conexion.execute({
+          sql: 'UPDATE tblusuarios SET nombre = ?, correo = ?, contraseya = ?, estado = ? WHERE id = ?;',
+          args: [nombre, correo, contraseyaEncriptada, estado, id]
+        })
+        resultado = rowsAffected
         console.log('Cambiar contraseña ', resultado)
       } else {
-        resultado = await conexion.run(
-          'UPDATE tblusuarios SET nombre = ?, correo = ?, estado = ? WHERE id = ?;',
-          nombre, correo, estado, id
-        )
+        const { rowsAffected } = await conexion.execute({
+          sql: 'UPDATE tblusuarios SET nombre = ?, correo = ?, estado = ? WHERE id = ?;',
+          args: [nombre, correo, estado, id]
+        })
+        resultado = rowsAffected
         console.log('NO Cambiar contraseña ', resultado)
       }
-      await conexion.run(
-        `DELETE FROM tblusuarios_tblpermisos 
+      await conexion.execute({
+        sql: `DELETE FROM tblusuarios_tblpermisos 
         WHERE usuario_id = ?`,
-        id
-      )
+        args: [id]
+      })
       if (seguridad) {
         if (seguridad.length > 0) {
           const misValores = []
           seguridad.forEach(async ele => {
             misValores.push([id, ele])
-            await conexion.run(
-              `INSERT INTO tblusuarios_tblpermisos (usuario_id, permiso_id) 
+            await conexion.execute({
+              sql: `INSERT INTO tblusuarios_tblpermisos (usuario_id, permiso_id) 
               VALUES (?,?)`,
-              id, ele
-            )
+              args: [id, ele]
+            })
           })
         }
       }
-      await DB.close()
-      if (resultado.changes > 0) return { id, nombre, correo, estado }
+      if (resultado > 0) return { id, nombre, correo, estado }
       return {}
     } catch (e) {
       generaLog(new Date().toString(), e, 'modelos/sqlite/usuario -> update', e.message)
-      await DB.close()
       return {}
     }
   }
