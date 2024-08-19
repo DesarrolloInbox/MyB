@@ -37,7 +37,8 @@ export class LoginController {
             token,
             id: objeto.id,
             nombre: objeto.nombre,
-            correo: objeto.correo
+            correo: objeto.correo,
+            seguridad: objeto.seguridad
           }
         })
       }
