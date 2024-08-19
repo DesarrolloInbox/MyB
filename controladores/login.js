@@ -15,16 +15,16 @@ export class LoginController {
       if (!result.success) {
         // const tmp = JSON.parse(result.error.message)
         console.log(JSON.parse(result.error.message))
-        return res.status(400).json({ estado: 0, error: 'Usuario/Contraseña Invalida 1' })
+        return res.status(200).json({ estado: 0, error: 'Usuario/Contraseña Invalida 1' })
       }
       const { correo, contraseya } = req.body
-      if (correo === undefined || contraseya === undefined) return res.status(401).json({ estado: 0, error: 'Usuario/Contraseña Invalida 2' })
+      if (correo === undefined || contraseya === undefined) return res.status(200).json({ estado: 0, error: 'Usuario/Contraseña Invalida 2' })
       const objeto = await this.usuarioModelo.getByCorreo({ correo })
-      if (esObjetoVacio(objeto)) return res.status(401).json({ estado: 0, error: 'Usuario/Contraseña Invalida 3' })
-      if (objeto.estado === 'Inactivo') return res.status(401).json({ estado: 0, error: 'Usuario Inactivo' })
+      if (esObjetoVacio(objeto)) return res.status(200).json({ estado: 0, error: 'Usuario/Contraseña Invalida 3' })
+      if (objeto.estado === 'Inactivo') return res.status(200).json({ estado: 0, error: 'Usuario Inactivo' })
       const matchPassword = await bcrypt.compare(contraseya, objeto.contraseya)
       if (!matchPassword) {
-        return res.status(401).json({ estado: 0, error: 'Usuario/Contraseña Invalida 4' })
+        return res.status(200).json({ estado: 0, error: 'Usuario/Contraseña Invalida 4' })
       } else {
         const token = jwt.sign({
           nombre: objeto.nombre,
