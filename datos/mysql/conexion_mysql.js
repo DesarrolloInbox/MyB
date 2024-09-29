@@ -1,11 +1,11 @@
 import mysql2 from 'mysql2/promise'
 
 const conexion = await mysql2.createConnection({
-  host: process.env.BD_HOST,
-  user:process.env. BD_USER,
-  password: process.env.BD_PASSWORD,
-  database: process.env.BD_DATABASE,
-  port: process.env.BD_PORT
+  host: process.env.MYSQL_BD_HOST,
+  user:process.env. MYSQL_BD_USER,
+  password: process.env.MYSQL_BD_PASSWORD,
+  database: process.env.MYSQL_BD_DATABASE,
+  port: process.env.MYSQL_BD_PORT
 })
 
 export default conexion

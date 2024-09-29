@@ -17,6 +17,7 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
+    "mssql": "^11.0.1",
     "mysql2": "^3.10.2",
     "promised-sqlite3": "^2.1.0",
     "sqlite3": "^5.1.7",
