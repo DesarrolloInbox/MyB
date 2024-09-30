@@ -75,13 +75,11 @@ export class UsuarioModelo {
   static async getByCorreo ({ correo }) {
     try {
       let conexion = await DB.open()
-      console.log('modelos->sqlite->usuario.js ', correo)
       const resUsr = await conexion.all(
         `SELECT id, nombre, correo, estado, contraseya
         FROM tblusuarios WHERE correo = ?;`,
         correo)
       DB.close()
-      console.log(resUsr)
       if (resUsr.length === 0) return {}
       conexion = await DB.open()
       const resSeg = await conexion.all(

@@ -1,5 +1,5 @@
 ### Login
-POST http://localhost:3000/api/login
+POST http://localhost:8000/api/login
 Content-Type: application/json
 
 {
@@ -18,8 +18,8 @@ Content-Type: application/json
 
 
 ### Obtener todos los usuarios
-GET http://localhost:3000/api/usuarios
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJub21icmUgdW5vIiwiY29ycmVvIjoidW5vMDFAYS5jb20iLCJpYXQiOjE3MjM5NTI2NzYsImV4cCI6MTcyMzk1ODY3Nn0.JeXNOXnwnPtBospNELvH014vCq3ilMqbR3FrTvrgAwM
+GET http://localhost:8000/api/usuarios
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJub21icmUgdW5vIiwiY29ycmVvIjoidW5vMDFAYS5jb20iLCJpYXQiOjE3Mjc2NTYwNDEsImV4cCI6MTcyNzY2MjA0MX0.aNAIJaIn8alle1acwgj1NO3WPdng6W0TW472hweAHn8
 
 ### Obtener todos los usuarios
 GET http://localhost:3000/api/usuarios?orderby=correo&pagina=1&registros=3
